@@ -16,13 +16,31 @@
 #include <cstdlib>
 #include <winsock2.h>
 #include <ws2tcpip.h>
+#include <thread>
+#include <chrono>
 
 #pragma comment(lib, "ws2_32.lib")
 
-int main()
+#ifdef _DEBUG 
+int main() {
+#else 
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+#endif
 {
 	int port = 7491; // Port to listen on  
 	const char* lockword = "lockme"; // Lockword to match for locking the computer  
+	char lmCommand[256];
+	char pingCommand[256];
+
+	sprintf_s(lmCommand, "lm.%s", lockword);
+	sprintf_s(pingCommand, "ping.%s", lockword);
+
+	char lmCommandRecv[256];
+	char pingCommandRecv[256];
+
+	sprintf_s(lmCommandRecv, "lmrecv.%s", lockword);
+	sprintf_s(pingCommandRecv, "pingrecv.%s", lockword);
+
 
 	WSADATA wsaData;
 	if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
@@ -56,6 +74,9 @@ int main()
 	int clientAddrSize = sizeof(clientAddr);
 
 	while (true) {
+		std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+
 		int bytesReceived = recvfrom(
 			udpSocket,
 			buffer,
@@ -76,6 +97,33 @@ int main()
 
 		std::cout << "Received from " << clientIP << ":" << ntohs(clientAddr.sin_port)
 			<< " - " << buffer << std::endl;
+
+		
+
+		// test for lock command
+		if (strcmp(buffer, lmCommand) == 0) {
+			sendto(
+				udpSocket,
+				lmCommandRecv,
+				strlen(lmCommandRecv),
+				0,
+				(sockaddr*)&clientAddr,
+				clientAddrSize
+			);
+			continue;
+		}
+
+		if (strcmp(buffer, pingCommand) == 0) {
+			sendto(
+				udpSocket,
+				pingCommandRecv,
+				strlen(pingCommandRecv),
+				0,
+				(sockaddr*)&clientAddr,
+				clientAddrSize
+			);
+			continue;
+		}
 	}
 
 	// Cleanup  
