@@ -22,9 +22,9 @@
 #pragma comment(lib, "ws2_32.lib")
 
 #ifdef _DEBUG 
-int main() {
+int main()
 #else 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 #endif
 {
 	int port = 7491; // Port to listen on  
@@ -110,6 +110,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				(sockaddr*)&clientAddr,
 				clientAddrSize
 			);
+
+			#ifndef _DEBUG 
+			system("rundll32.exe user32.dll,LockWorkStation"); // Lock the workstation
+			#endif
 			continue;
 		}
 
