@@ -130,6 +130,9 @@
   <ItemGroup>
     <ClCompile Include="src\lockme.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="lockmeautorun.bat" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
