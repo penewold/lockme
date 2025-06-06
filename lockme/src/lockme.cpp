@@ -27,8 +27,8 @@ int main()
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 #endif
 {
-	int port = 7491; // Port to listen on  
-	const char* lockword = "lockme"; // Lockword to match for locking the computer  
+	int port = 7492; // Port to listen on  
+	const char* lockword = "laasmig"; // Lockword to match for locking the computer  
 	char lmCommand[256];
 	char pingCommand[256];
 
